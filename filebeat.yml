@@ -1,0 +1,18 @@
+##### Configuration
+
+filebeat.inputs:
+- type: filestream
+  enabled: true
+  paths:
+    - /var/log/logs/output-csv/*.csv
+
+output.kafka:
+  hosts: ["34.125.80.35:9092"]
+  topic: "topico1"
+  codec.json:
+    pretty: false
+
+
+##### Run
+
+bin/logstash -f logstash-simple.conf --path.settings=/etc/logstash

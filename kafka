@@ -1,0 +1,52 @@
+############ Configuration service zookeeper
+
+[Unit]
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Service]
+Type=simple
+User=kafka
+ExecStart=/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.log 2>&1'
+ExecStop=/home/kafka/kafka/bin/kafka-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+
+############ Configuration service kafka
+
+[Unit]
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=kafka
+ExecStart=/home/kafka/kafka/bin/zookeeper-server-start.sh /home/kafka/kafka/config/zookeeper.properties
+ExecStop=/home/kafka/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+
+
+############ Testing (Producer y Consumer)
+
+***** Creación del topico
+~/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic topico1
+
+***** Producer ejemplo
+echo {"nombre":"Alberto","apellido":"Sanchez","genero":"M"} | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topico1 > /dev/null
+
+***** Consumer
+~/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topico1 --from-beginning
+
+
+
+
+
+
+
+
+
