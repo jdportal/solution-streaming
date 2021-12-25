@@ -8,4 +8,4 @@ for filename in os.listdir(path):
         with open(os.path.join(path,filename), 'r') as f:
             data = json.load(f)
         data_transformed = json_normalize(data)
-        data_transformed.to_csv('/var/log/logs/output-csv/output-'+filename.replace("json", "csv"), index=None)
+        data_transformed.to_csv('/var/log/logs/output-csv/output-'+filename.replace("json", "log"), index=None)
